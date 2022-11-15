@@ -80,6 +80,8 @@ async function main() {
     execSync("npx rimraf ./package-lock.json");
     execSync("npx rimraf ./.gitignore");
     execSync("npx rimraf ./tasks");
+    execSync("npx rimraf ./LICENSE");
+    execSync("npx rimraf ./README.md");
 
     console.log("Copying Template to root");
     // copy everything from template to root
