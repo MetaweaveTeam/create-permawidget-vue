@@ -1,0 +1,20 @@
+{
+  "name": "create-permawidget-vue",
+  "version": "1.0.0",
+  "description": "🛠️ The Create Permapages widget boilerplate",
+  "bin": {
+    "create-permawidget-vue": "./tasks/cpa.js"
+  },
+  "author": {
+    "name" : "André Nunes",
+    "email" : "hello@anuness.dev",
+    "url" : "https://anuness.dev/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MetaweaveTeam/create-permawidget-vue.git"
+  },
+  "license": "MIT",
+  "bugs": "https://github.com/MetaweaveTeam/create-permawidget-vue/issues",
+  "homepage": "https://github.com/MetaweaveTeam/create-permawidget-vue"
+}
