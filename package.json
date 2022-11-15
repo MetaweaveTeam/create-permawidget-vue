@@ -1,6 +1,6 @@
 {
   "name": "create-permawidget-vue",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "🛠️ The Create Permapages widget boilerplate",
   "bin": {
     "create-permawidget-vue": "./tasks/cpa.js"

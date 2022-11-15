@@ -10,9 +10,10 @@ const projectPath = path.join(currentPath, projectName);
 const git_repo = "https://github.com/MetaweaveTeam/create-permawidget-vue.git";
 
 if (process.argv.length < 3) {
-  console.error("You have to provide a name to your app.");
-  console.error("For example :");
-  console.error("     npx create-permawidget-vue my-app");
+  log(
+    "Error - Please provide a project name \x1b[0m\n\tExample: npx create-permawidget-vue my-project",
+    "error"
+  );
   process.exit();
 }
 
@@ -20,61 +21,23 @@ try {
   fs.mkdirSync(projectPath);
 } catch (err) {
   if (err.code === "EEXIST") {
-    console.log(
-      `The file ${projectName} already exist in the current directory, please give it another name.`
+    log(
+      `Error - The project ${projectName} already exists, please choose another name`,
+      "error"
     );
   } else {
     console.log(err.message);
   }
 }
 
-function copyFileSync(source, target) {
-  var targetFile = target;
-
-  // If target is a directory, a new file with the same name will be created
-  if (fs.existsSync(target)) {
-    if (fs.lstatSync(target).isDirectory()) {
-      targetFile = path.join(target, path.basename(source));
-    }
-  }
-
-  fs.writeFileSync(targetFile, fs.readFileSync(source));
-}
-
-function copyFolderRecursiveSync(source, target) {
-  var files = [];
-
-  // Check if folder needs to be created or integrated
-  var targetFolder = path.join(target, path.basename(source));
-  if (!fs.existsSync(targetFolder)) {
-    fs.mkdirSync(targetFolder);
-  }
-
-  // Copy
-  if (fs.lstatSync(source).isDirectory()) {
-    files = fs.readdirSync(source);
-    files.forEach(function (file) {
-      var curSource = path.join(source, file);
-      if (fs.lstatSync(curSource).isDirectory()) {
-        copyFolderRecursiveSync(curSource, targetFolder);
-      } else {
-        copyFileSync(curSource, targetFolder);
-      }
-    });
-  }
-}
-
 async function main() {
   try {
-    console.log("Downloading files...");
+    log("Cloning the repository...", "info");
     execSync(`git clone --depth 1 ${git_repo} ${projectPath}`);
 
     process.chdir(projectPath);
 
-    console.log("Installing dependencies...");
-    execSync("npm install");
-
-    console.log("Removing useless files");
+    log("Removing useless files...", "info");
     execSync("npx rimraf ./.git");
     execSync("npx rimraf ./package.json");
     execSync("npx rimraf ./package-lock.json");
@@ -83,8 +46,7 @@ async function main() {
     execSync("npx rimraf ./LICENSE");
     execSync("npx rimraf ./README.md");
 
-    console.log("Copying Template to root");
-    // copy everything from template to root
+    log("Copying Template to root", "info");
     execSync(
       "mv ./template/* . || " +
         "move ./template/* . || " +
@@ -92,9 +54,36 @@ async function main() {
         "cp -r ./template/* . "
     );
 
-    console.log("The installation is done, this is ready to use !");
+    log(
+      `The installation is done, this is ready to use !\x1b[0m\n\nYou can now run the following commands:\n\tcd oi\n\tnpm install\n\tnpm run serve\n\n\x1b[35m\x1b[1mHappy coding !`,
+      "success"
+    );
   } catch (error) {
-    console.log(error);
+    log(error.message, "error");
   }
 }
+
+function log(message, type = "info") {
+  type = type.toLowerCase();
+  if (
+    type != "info" &&
+    type != "error" &&
+    type != "success" &&
+    type != "warn"
+  ) {
+    type = "info";
+  }
+
+  const color = {
+    info: "\x1b[36m",
+    error: "\x1b[31m",
+    success: "\x1b[32m",
+    warn: "\x1b[33m",
+  };
+
+  console.log(
+    `${color[type]}\x1b[1m[Permawidget VueJS]\x1b[0m${color[type]} ${message}`
+  );
+}
+
 main();
