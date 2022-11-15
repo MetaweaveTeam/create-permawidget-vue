@@ -6,9 +6,9 @@
     "create-permawidget-vue": "./tasks/cpa.js"
   },
   "author": {
-    "name" : "André Nunes",
-    "email" : "hello@anuness.dev",
-    "url" : "https://anuness.dev/"
+    "name": "André Nunes",
+    "email": "hello@anuness.dev",
+    "url": "https://anuness.dev/"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
   },
   "license": "MIT",
   "bugs": "https://github.com/MetaweaveTeam/create-permawidget-vue/issues",
-  "homepage": "https://github.com/MetaweaveTeam/create-permawidget-vue"
+  "homepage": "https://github.com/MetaweaveTeam/create-permawidget-vue",
+  "dependencies": {
+    "rimraf": "^3.0.2"
+  }
 }
