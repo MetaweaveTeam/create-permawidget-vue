@@ -4,9 +4,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        mtw_purple: "#f817b5",
-        mtw_white_alt: "#f9f9f9",
-        mtw_white_alt2: "#f3f4ff",
       },
     },
   },

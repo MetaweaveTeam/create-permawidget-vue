@@ -1,11 +1,11 @@
 {
   "name": "create-permawidget-vue",
-  "version": "1.0.0",
-  "description": "🛠️ The Permapages widget boilerplate",
+  "version": "1.1.3",
+  "description": "🛠️ The Permapages widget boilerplate sample for Vue.js",
   "author": {
-    "name" : "André Nunes",
-    "email" : "hello@anuness.dev",
-    "url" : "https://anuness.dev/"
+    "name": "André Nunes",
+    "email": "hello@anuness.dev",
+    "url": "https://anuness.dev/"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,9 @@
     "deploy": "node deploy.mjs"
   },
   "dependencies": {
+    "arweave": "^1.11.6",
     "daisyui": "^2.31.0",
+    "mime-types": "^2.1.35",
     "pinia": "^2.0.21",
     "vite-plugin-css-injected-by-js": "^2.1.1",
     "vue": "^3.2.38",
