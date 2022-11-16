@@ -3,35 +3,17 @@
 const { execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const prompt = require("prompt-sync")();
 
-const projectName = process.argv[2];
-const rootPath = process.cwd();
-const projectPath = path.join(rootPath, projectName);
-const git_repo = "https://github.com/MetaweaveTeam/create-permawidget-vue.git";
+function main(name, overwrite = false) {
+  const projectName = getProjectName(name);
+  const rootPath = process.cwd();
+  const projectPath = path.join(rootPath, projectName);
+  const git_repo =
+    "https://github.com/MetaweaveTeam/create-permawidget-vue.git";
 
-if (process.argv.length < 3) {
-  log(
-    "Error - Please provide a project name \x1b[0m\n\tExample: npx create-permawidget-vue my-project",
-    "error"
-  );
-  process.exit();
-}
-
-try {
-  fs.mkdirSync(projectPath);
-} catch (err) {
-  if (err.code === "EEXIST") {
-    log(
-      `Error - The project ${projectName} already exists, please choose another name`,
-      "error"
-    );
-  } else {
-    console.log(err.message);
-  }
-}
-
-async function main() {
   try {
+    fs.mkdirSync(projectPath, { recursive: overwrite });
     log("Cloning the repository...", "info");
     execSync(`git clone --depth 1 ${git_repo} ${projectPath}`);
 
@@ -92,22 +74,66 @@ async function main() {
     log("index.html successfully updated", "success");
 
     log(
-      `The installation is done, this is ready to use !\x1b[0m\n\nYou can now run the following commands:\n\tcd oi\n\tnpm install\n\tnpm run serve\n\n\x1b[35m\x1b[1mHappy coding !`,
+      `The installation is done, this is ready to use !\x1b[0m\n\nYou can now run the following commands:\n\tcd ${projectName}\n\tnpm install\n\tnpm run serve\n\n\x1b[35m\x1b[1mHappy coding !`,
       "success"
     );
   } catch (error) {
+    if (error.code === "EEXIST") {
+      log(`${projectPath} already exists`, "warn");
+      const overwrite = input(
+        "Folder already exists, do you want to overwrite it ? [y/n] ",
+        "warn"
+      ).toLowerCase();
+
+      if (overwrite === "y" || overwrite == "yes") {
+        const overwriteConfirm = input(
+          `We are going to overwrite the folder ${projectPath}, are you sure? [y/n] `,
+          "warn"
+        ).toLowerCase();
+
+        if (overwriteConfirm === "y" || overwriteConfirm == "yes") {
+          execSync(`npx rimraf ${projectPath}/*`);
+          main(projectName, true);
+          process.exit(0);
+        }
+      }
+
+      log("User declined overwrite");
+      log("Aborting installation", "error");
+    }
     log(error.message, "error");
   }
 }
 
+function getProjectName(name) {
+  const currentFolder = process.cwd().split("/").pop();
+  name =
+    name ||
+    process.argv[2] ||
+    input(`Project name (Default: ${currentFolder}): `) ||
+    ".";
+
+  if (name === "." || name === "./") {
+    return name;
+  }
+
+  name = name
+    .replace(/ñ/g, "n")
+    .replace(/é/g, "e")
+    .replace(/ç/g, "c")
+    .replace(/\s+/g, "-")
+    .replace(/@/g, "a")
+    .replace(/[^a-z0-9\-_~]+/gi, "")
+    .replace(/[^a-z0-9-]/gi, "")
+    .toLowerCase();
+
+  log(`Project name: ${name}`, "info");
+  return name;
+}
+
 function log(message, type = "info") {
   type = type.toLowerCase();
-  if (
-    type != "info" &&
-    type != "error" &&
-    type != "success" &&
-    type != "warn"
-  ) {
+  if (type != "error" && type != "success" && type != "warn") {
     type = "info";
   }
 
@@ -120,6 +146,29 @@ function log(message, type = "info") {
 
   console.log(
     `${color[type]}\x1b[1m[Permawidget VueJS]\x1b[0m${color[type]} ${message}`
+  );
+
+  if (type == "error") {
+    process.exit(1);
+  }
+}
+
+function input(question, type = "question") {
+  type = type.toLowerCase();
+
+  if (type != "password" && type != "success" && type != "warn") {
+    type = "question";
+  }
+
+  const color = {
+    question: "\x1b[35m",
+    success: "\x1b[32m",
+    warn: "\x1b[33m",
+  };
+  const reset = "\x1b[0m";
+  const bold = "\x1b[1m";
+  return prompt(
+    `${color[type]}${bold}[Permawidget VueJS] ${reset}${color[type]}${question}${reset}`
   );
 }
 
