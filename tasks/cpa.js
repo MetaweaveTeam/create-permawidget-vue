@@ -74,7 +74,7 @@ function main(name, overwrite = false) {
     log("index.html successfully updated", "success");
 
     log(
-      `The installation is done, this is ready to use !\x1b[0m\n\nYou can now run the following commands:\n\tcd ${projectName}\n\tnpm install\n\tnpm run serve\n\n\x1b[35m\x1b[1mHappy coding !`,
+      `The installation is done, this is ready to use !\x1b[0m\n\nYou can now run the following commands:\n\tcd ${projectName}\n\tnpm install\n\tnpm run dev\n\n\x1b[35m\x1b[1mHappy coding !`,
       "success"
     );
   } catch (error) {
